@@ -1,7 +1,7 @@
 name: Interating docker via Github Actions
 on:
   workflow_dispatch:
-    # branches: [ "master" ]
+    branches: [ "master" ]
 
 jobs:
   deploy:
@@ -11,11 +11,11 @@ jobs:
       - name: Cloning Github Repository
         uses: actions/checkout@v7.0.0
 
-      # - name: Setup Username and Password for Docker
-      #   uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0
-      #   with:
-      #     username: ${{ vars.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Setup Username and Password for Docker
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build an image from Dockerfile
         run: docker build -t ${{ vars.DOCKER_IMAGE }} .
@@ -23,8 +23,8 @@ jobs:
       - name: Tag the Image
         run: docker tag ${{ vars.DOCKER_IMAGE }} ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}:v1
 
-      - name: Docker Login
-        run: docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      # - name: Docker Login
+      #   run: docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push the image to Dockerhub
         run: docker push ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}:v1 
