@@ -1,7 +1,7 @@
 name: Interating docker via Github Actions
 on:
   workflow_dispatch:
-    branches: [ "master" ]
+    # branches: [ "master" ]
 
 jobs:
   deploy:
