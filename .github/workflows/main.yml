@@ -1,7 +1,7 @@
-name: Integrating docker via Github Actions
+name: Interating docker via Github Actions
 on:
-  # 'branches' is invalid under 'workflow_dispatch'. It must stand alone.
   workflow_dispatch:
+    branches: [ "master" ]
 
 jobs:
   deploy:
@@ -9,11 +9,11 @@ jobs:
 
     steps:
       - name: Cloning Github Repository
-        # v7.0.0 does not exist. v4 is the current standard.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.0
 
       - name: Setup Username and Password for Docker
-        uses: docker/login-action@v3
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0
+        # uses: docker/login-action@v4.4.0
         with:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -24,5 +24,8 @@ jobs:
       - name: Tag the Image
         run: docker tag ${{ vars.DOCKER_IMAGE }} ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}:v1
 
+      # - name: Docker Login
+      #   run: docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Push the image to Dockerhub
-        run: docker push ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}:v1
+        run: docker push ${{ vars.DOCKER_USERNAME }}/${{ vars.DOCKER_IMAGE }}:v1 
