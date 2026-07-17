@@ -15,7 +15,7 @@ jobs:
       - name: Setup Username and Password for Docker
         uses: docker/login-action@v3
         with:
-          username: shashankj017 
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build an image from Dockerfile
