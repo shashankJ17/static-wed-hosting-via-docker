@@ -1,0 +1,32 @@
+name: Deploying application to EC2
+on:
+  workflow_dispatch: 
+
+jobs:
+  aws-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: cloning the github repo
+        uses: actions/checkout@v7.0.0
+
+      - name: Copy website files to nginx
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "./*"
+          target: "/tmp/website"
+
+      - name: Deploy into website
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: | 
+            sudo cp -r /tmp/website/* /var/www/html
+            sudo systemctl reload nginx
+          
+        
